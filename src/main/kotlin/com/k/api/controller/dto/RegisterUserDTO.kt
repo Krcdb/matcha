@@ -1,6 +1,6 @@
-package com.k.api.controller.DTO
+package com.k.api.controller.dto
 
-data class AddUserDTO(
+data class RegisterUserDTO(
     val email: String,
     val password: String,
     val firstName: String,

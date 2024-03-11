@@ -1,7 +1,8 @@
 package com.k.api.service
 
-import com.k.api.controller.DTO.AddUserDTO
-import com.k.api.controller.DTO.LoginDTO
+import com.k.api.controller.dto.DeleteUserDTO
+import com.k.api.controller.dto.RegisterUserDTO
+import com.k.api.controller.dto.LoginDTO
 import com.k.api.enum.UserRole
 import com.k.api.enum.UserStatus
 import com.k.api.model.User
@@ -22,7 +23,7 @@ class UserService (
         return userRepository.findAll()
     }
 
-    fun registerNewUser(userInfo: AddUserDTO): User {
+    fun registerNewUser(userInfo: RegisterUserDTO): User {
         userRepository.findByEmail(userInfo.email)?.let {
             throw Exception("This email is already taken")
         }
@@ -42,10 +43,19 @@ class UserService (
     }
 
     fun login(loginInfo: LoginDTO): Boolean {
-        val user = userRepository.findByEmail(loginInfo.email) ?: throw UserNotFoundException("${loginInfo.email} not found")
+        val user = userRepository.findByEmail(loginInfo.email)
+            ?: throw UserNotFoundException("${loginInfo.email} not found")
         if (!BCrypt.checkpw(loginInfo.password, user.password)) {
             throw WrongEmailPasswordException("Wrong password")
         }
         return true
+    }
+
+    fun delete(deleteUserDTO: DeleteUserDTO) {
+        val user = userRepository.findByEmail(deleteUserDTO.email)
+            ?: throw UserNotFoundException("${deleteUserDTO.email} not found")
+        user.id?.let {
+            id -> userRepository.deleteById(id)
+        }
     }
 }
