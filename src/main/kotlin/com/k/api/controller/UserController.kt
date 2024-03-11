@@ -27,13 +27,13 @@ class UserController(
     }
 
     @PostMapping("/add")
-    fun addUser(@RequestBody addUserDTO: AddUserDTO): ResponseEntity<String> {
+    fun registerNewUser(@RequestBody addUserDTO: AddUserDTO): ResponseEntity<String> {
         try {
-            var res: String? = userService.addUser(addUserDTO)
+            val newUser: User = userService.registerNewUser(addUserDTO)
+            return ResponseEntity.ok("user ${newUser.email} added")
         } catch (e: Exception) {
             logger.error { "${e.message}" }
-
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.message)
         }
-        return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 }

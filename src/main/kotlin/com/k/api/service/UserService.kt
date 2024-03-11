@@ -5,6 +5,7 @@ import com.k.api.enum.UserRole
 import com.k.api.enum.UserStatus
 import com.k.api.model.User
 import com.k.api.repository.UserRepository
+import org.mindrot.jbcrypt.BCrypt
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -18,19 +19,22 @@ class UserService (
         return userRepository.findAll()
     }
 
-    fun addUser(userInfo: AddUserDTO): String? {
+    fun registerNewUser(userInfo: AddUserDTO): User {
+        userRepository.findByEmail(userInfo.email)?.let {
+            throw Exception("This email is already taken")
+        }
         val newUser = User(
             id = null,
             email = userInfo.email,
-            password = userInfo.password,
+            password = BCrypt.hashpw(userInfo.password, BCrypt.gensalt()),
             firstName = userInfo.firstName,
             lastName = userInfo.lastName,
-            role = UserRole.USER,
-            userStatus = UserStatus.CREATED,
+            role = UserRole.ADMIN,
+            userStatus = UserStatus.OK,
             matchInfo = null
         )
 
         userRepository.insert(newUser)
-        return null
+        return newUser
     }
 }
