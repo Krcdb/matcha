@@ -33,7 +33,7 @@ class UserService (
             password = BCrypt.hashpw(userInfo.password, BCrypt.gensalt()),
             firstName = userInfo.firstName,
             lastName = userInfo.lastName,
-            role = UserRole.ADMIN,
+            role = UserRole.USER,
             userStatus = UserStatus.OK,
             matchInfo = null
         )
