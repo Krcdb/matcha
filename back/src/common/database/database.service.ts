@@ -35,22 +35,62 @@ export class DatabaseService implements OnModuleInit {
       ["jd@gmail.com", "jd", "John", "Doe", "123456789", "1992-10-18", "male", "female", "bio"]
     );
 
-    this.logger.debug(insert)
+    // this.logger.debug(insert)
     
-    this.execute(insert.query, insert.params);
+    // this.execute(insert.query, insert.params);
 
-    const select = this.selectQuery(
-      "users",
-      ["id", "email"],
-      ["gender", "username"],
-      ["male", "jd"],
-    );
+    // let select = this.selectQuery(
+    //   "users",
+    //   ["id", "email"],
+    //   ["gender", "username"],
+    //   ["male", "jd"],
+    // );
 
-    this.logger.debug(select);
+    // this.logger.debug(select);
 
-    const res = await this.execute(select.query, select.params);
+    // let res = await this.execute(select.query, select.params);
 
-    this.logger.debug(res.rows)
+    // this.logger.debug(res.rows);
+
+    // const update = this.updateQuery(
+    //   "users",
+    //   ["username", "email"],
+    //   ["bob", "plop@plop.com"],
+    //   ["username"],
+    //   ["jd"]
+    // );
+    // this.logger.debug(update);
+
+    // res = await this.execute(update.query, update.params);
+
+    // this.logger.debug(res.rowCount);
+
+    // select = this.selectQuery(
+    //   "users",
+    //   ["*"],
+    //   [],
+    //   [],
+    // );
+    // res = await this.execute(select.query, select.params);
+
+    // this.logger.debug(res.rows);
+
+    // let deleteQ = this.deleteQuery(
+    //   "users",
+    //   ["username", "first_name"],
+    //   ["bob", "John"]
+    // );
+
+    // this.logger.debug(deleteQ);
+
+    // res = await this.execute(deleteQ.query, deleteQ.params);
+
+    // this.logger.debug(res.rows);
+
+    // res = await this.execute(select.query, select.params);
+
+    // this.logger.debug(res.rows);
+
     this.logger.log("Db populated");
   }
 
@@ -59,19 +99,49 @@ export class DatabaseService implements OnModuleInit {
   }
 
   insertQuery(table: string, columns: string[], params: string[]): { query : string, params: string[]} {
-    this.logger.log(columns)
     let query = "INSERT INTO " + table + " (";
     query += columns.join(", ");
     query += ") VALUES (";
     query += params.map((_, i) => `$${i + 1}`).join(", ");
-    query += ")"
+    query += ")";
     
-    return { query, params }
+    return { query, params };
   }
 
   selectQuery(table: string, wantedColums: string[], wheresColums: string[], wheresParams: string[]): { query: string, params: string[] } {
-    let query = `SELECT ${wantedColums.join(", ")} FROM ${table} WHERE `;
-    query += wheresColums.map((col, i) => `${col} = $${i + 1}`).join(' AND ');
+    let query = `SELECT ${wantedColums.join(", ")} FROM ${table}`;
+
+    const whereClause = wheresColums.map((col, i) => `${col} = $${i + 1}`).join(' AND ');
+
+    if (whereClause.length !== 0) {
+      query += ' WHERE ' + whereClause;
+    }
+
+    return { query, params: wheresParams }
+  }
+
+  updateQuery(table: string, setColums: string[], setColumsValues: string[], wheresColums: string[], wheresParams: string[]): { query: string, params: string[] } {
+    const setParamsLength = setColums.length;
+    
+    let query = `UPDATE ${table} SET `;
+    query += setColums.map((col, i) => `${col} = $${i + 1}`).join(', ');
+    const whereClause = wheresColums.map((col, i) => `${col} = $${i + setParamsLength + 1}`).join(' AND ');
+
+    if (whereClause.length !== 0) {
+      query += ' WHERE ' + whereClause;
+    }
+
+    return { query, params: setColumsValues.concat(wheresParams) }
+  }
+
+  deleteQuery(table: string, wheresColums: string[], wheresParams: string[]): { query: string, params: string[] } {
+    let query = `DELETE FROM ${table}`;
+
+    const whereClause = wheresColums.map((col, i) => `${col} = $${i + 1}`).join(' AND ');
+
+    if (whereClause.length !== 0) {
+      query += ' WHERE ' + whereClause;
+    }
 
     return { query, params: wheresParams }
   }
