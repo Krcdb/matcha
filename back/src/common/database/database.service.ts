@@ -29,7 +29,31 @@ export class DatabaseService implements OnModuleInit {
     await this.pool.query(createTableFile);
     this.logger.log(`All table created`);
 
+    const insert = this.insertQuery(
+      "users",
+      ["email", "username", "first_name", "last_name", "password", "date_of_birth", "gender", "sexual_preferences", "biography"],
+      ["jd@gmail.com", "jd", "John", "Doe", "123456789", "1992-10-18", "male", "female", "bio"]
+    );
 
+    this.logger.debug(insert)
+    
+    this.execute(insert.query, insert.params);
+    this.logger.log("Db populated");
   }
+
+  async execute(query: string, params: string []) {
+    await this.pool.query(query, params);
+  }
+
+  insertQuery(table: string, columns: string[], params: string[]): { query : string, params: string[]} {
+    this.logger.log(columns)
+    let query = "INSERT INTO " + table + " (";
+    query += columns.join(", ");
+    query += ") VALUES (";
+    query += params.map((_, i) => `$${i + 1}`).join(", ");
+    query += ")"
+    return {query, params}
+  }
+
 };
 
