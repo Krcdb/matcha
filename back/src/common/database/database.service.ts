@@ -38,11 +38,24 @@ export class DatabaseService implements OnModuleInit {
     this.logger.debug(insert)
     
     this.execute(insert.query, insert.params);
+
+    const select = this.selectQuery(
+      "users",
+      ["id", "email"],
+      ["gender", "username"],
+      ["male", "jd"],
+    );
+
+    this.logger.debug(select);
+
+    const res = await this.execute(select.query, select.params);
+
+    this.logger.debug(res.rows)
     this.logger.log("Db populated");
   }
 
   async execute(query: string, params: string []) {
-    await this.pool.query(query, params);
+    return this.pool.query(query, params);
   }
 
   insertQuery(table: string, columns: string[], params: string[]): { query : string, params: string[]} {
@@ -52,8 +65,15 @@ export class DatabaseService implements OnModuleInit {
     query += ") VALUES (";
     query += params.map((_, i) => `$${i + 1}`).join(", ");
     query += ")"
-    return {query, params}
+    
+    return { query, params }
   }
 
+  selectQuery(table: string, wantedColums: string[], wheresColums: string[], wheresParams: string[]): { query: string, params: string[] } {
+    let query = `SELECT ${wantedColums.join(", ")} FROM ${table} WHERE `;
+    query += wheresColums.map((col, i) => `${col} = $${i + 1}`).join(' AND ');
+
+    return { query, params: wheresParams }
+  }
 };
 
