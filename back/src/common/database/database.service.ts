@@ -81,7 +81,7 @@ export class DatabaseService implements OnModuleInit {
     //   ["bob", "John"]
     // );
 
-    // this.logger.debug(deleteQ);
+    // this.logger.debug(deleteQ); 
 
     // res = await this.execute(deleteQ.query, deleteQ.params);
 
@@ -91,6 +91,7 @@ export class DatabaseService implements OnModuleInit {
 
     // this.logger.debug(res.rows);
 
+    
     this.logger.log("Db populated");
   }
 
