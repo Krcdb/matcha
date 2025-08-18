@@ -29,68 +29,6 @@ export class DatabaseService implements OnModuleInit {
     await this.pool.query(createTableFile);
     this.logger.log(`All table created`);
 
-    const insert = this.insertQuery(
-      "users",
-      ["email", "username", "first_name", "last_name", "password", "date_of_birth", "gender", "sexual_preferences", "biography"],
-      ["jd@gmail.com", "jd", "John", "Doe", "123456789", "1992-10-18", "male", "female", "bio"]
-    );
-
-    // this.logger.debug(insert)
-    
-    // this.execute(insert.query, insert.params);
-
-    // let select = this.selectQuery(
-    //   "users",
-    //   ["id", "email"],
-    //   ["gender", "username"],
-    //   ["male", "jd"],
-    // );
-
-    // this.logger.debug(select);
-
-    // let res = await this.execute(select.query, select.params);
-
-    // this.logger.debug(res.rows);
-
-    // const update = this.updateQuery(
-    //   "users",
-    //   ["username", "email"],
-    //   ["bob", "plop@plop.com"],
-    //   ["username"],
-    //   ["jd"]
-    // );
-    // this.logger.debug(update);
-
-    // res = await this.execute(update.query, update.params);
-
-    // this.logger.debug(res.rowCount);
-
-    // select = this.selectQuery(
-    //   "users",
-    //   ["*"],
-    //   [],
-    //   [],
-    // );
-    // res = await this.execute(select.query, select.params);
-
-    // this.logger.debug(res.rows);
-
-    // let deleteQ = this.deleteQuery(
-    //   "users",
-    //   ["username", "first_name"],
-    //   ["bob", "John"]
-    // );
-
-    // this.logger.debug(deleteQ); 
-
-    // res = await this.execute(deleteQ.query, deleteQ.params);
-
-    // this.logger.debug(res.rows);
-
-    // res = await this.execute(select.query, select.params);
-
-    // this.logger.debug(res.rows);
-
     
     this.logger.log("Db populated");
   }
