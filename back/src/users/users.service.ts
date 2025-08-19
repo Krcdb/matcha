@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
+import { ConflictException, HttpException, HttpStatus, Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { DatabaseService } from "src/common/database/database.service";
 import * as bcrypt from "bcrypt";
@@ -47,13 +47,21 @@ export class UsersService {
         }
       }
     } catch (e: any) {
-      this.logger.error("Error during user creation", e.stack);
-
+      this.logger.error(`Error during user creation : ${e.message}`);
+      
       if (e.code === "23505") {
         throw new ConflictException("Email or username already exists");
       }
-
+      
       throw new InternalServerErrorException("An unexpected error occurred");
     }
+  }
+
+  async findAll() {
+    return "findAll"
+  }
+
+  async findOne(id: string) {
+    return "findOne"
   }
 }
