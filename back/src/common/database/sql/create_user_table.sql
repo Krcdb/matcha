@@ -12,6 +12,7 @@
       fame_rating INT DEFAULT 0,
       biography VARCHAR(255),
       is_verified BOOLEAN DEFAULT false,
+      verification_code INT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
 
