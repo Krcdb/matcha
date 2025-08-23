@@ -102,7 +102,6 @@ export class AuthService {
       if (e instanceof UnauthorizedException) {
         throw e;
       }
-
       this.logger.error(`Error during login ${e.message}`);
       throw new InternalServerErrorException("An unexpected error occurred");
     }
