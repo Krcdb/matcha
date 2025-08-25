@@ -14,12 +14,13 @@ export class UsersController {
   }
 
   @Get()
+  //@UseGuards(AuthGuard('jwt'))
   async findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   async findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
