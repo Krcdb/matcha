@@ -16,7 +16,7 @@ export class ReportService {
     const insertQuery = this.databaseService.insertQuery(
       "reported",
       ["reporter", "reported"],
-      [reporter, reported]
+      [reporter.toString(), reported.toString()]
     )
 
     try {

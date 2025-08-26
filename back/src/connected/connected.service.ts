@@ -14,12 +14,12 @@ export class ConnectedService {
     const insertQuery1 = this.databaseService.insertQuery(
       "connected",
       ["user_id", "connected"],
-      [userId, connected],
+      [userId.toString(), connected.toString()],
     );
     const insertQuery2 = this.databaseService.insertQuery(
       "connected",
       ["user_id", "connected"],
-      [connected, userId],
+      [connected.toString(), userId.toString()],
     )
 
     try {

@@ -1,4 +1,4 @@
 export interface ReportResponse {
-  reporter: string;
-  reported: string;
+  reporter: number;
+  reported: number;
 }

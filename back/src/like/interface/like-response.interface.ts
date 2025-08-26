@@ -1,4 +1,4 @@
 export interface LikeResponse {
-  liker: string;
-  liked: string;
+  liker: number;
+  liked: number;
 }

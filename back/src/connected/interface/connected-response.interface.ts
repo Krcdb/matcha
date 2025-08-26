@@ -1,4 +1,4 @@
 export interface ConnectedResponse {
-  userId: string;
-  connected: string;
+  userId: number;
+  connected: number;
 }

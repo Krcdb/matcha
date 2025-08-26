@@ -1,4 +1,4 @@
 export interface ReportDto {
-  reporter: string;
-  reported: string;
+  reporter: number;
+  reported: number;
 }

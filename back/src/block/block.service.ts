@@ -16,7 +16,7 @@ export class BlockService {
     const insertQuery = this.databaseService.insertQuery(
       "blocked",
       ["blocker", "blocked"],
-      [blocker, blocked]
+      [blocker.toString(), blocked.toString()]
     )
 
     try {

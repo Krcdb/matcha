@@ -21,7 +21,7 @@ export class LikeService {
       "liked",
       ["*"],
       ["liker", "liked"],
-      [liked, liker],
+      [liked.toString(), liker.toString()],
     )
 
     try {
@@ -48,7 +48,7 @@ export class LikeService {
       const insertQuery = this.databaseService.insertQuery(
         "liked",
         ["liker", "liked"],
-        [liker, liked]
+        [liker.toString(), liked.toString()]
       )
 
       await this.databaseService.execute(insertQuery.query, insertQuery.params);
@@ -76,7 +76,7 @@ export class LikeService {
     const deleteQuery = this.databaseService.deleteQuery(
       "liked",
       ["liker", "liked"],
-      [liker, liked]
+      [liker.toString(), liked.toString()]
     )
     try {
       const result = await this.databaseService.execute(deleteQuery.query, deleteQuery.params);

@@ -1,4 +1,4 @@
 export interface ViewResponse {
-  viewer: string;
-  viewed: string;
+  viewer: number;
+  viewed: number;
 }

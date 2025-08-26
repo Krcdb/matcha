@@ -1,4 +1,4 @@
 export interface ViewDto {
-  viewer: string;
-  viewed: string;
+  viewer: number;
+  viewed: number;
 }

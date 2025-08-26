@@ -21,7 +21,7 @@ export class UsersController {
 
   @Get(':id')
   //@UseGuards(AuthGuard('jwt'))
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: number) {
     return this.usersService.findOne(id);
   }
 }

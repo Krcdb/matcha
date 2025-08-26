@@ -1,4 +1,4 @@
 export interface BlockResponse {
-  blocker: string;
-  blocked: string;
+  blocker: number;
+  blocked: number;
 }

@@ -16,7 +16,7 @@ export class ViewService {
     const insertQuery = this.databaseService.insertQuery(
       "viewed",
       ["viewer", "viewed"],
-      [viewer, viewed]
+      [viewer.toString(), viewed.toString()]
     )
 
     try {

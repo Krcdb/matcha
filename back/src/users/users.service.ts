@@ -96,12 +96,12 @@ export class UsersService {
     }
   }
 
-  async findOne(id: string): Promise<ApiResponse<FindUserResponse>> {
+  async findOne(id: number): Promise<ApiResponse<FindUserResponse>> {
     const selectQuery = this.databaseService.selectQuery(
       "users",
       ["*"],
       ["id"],
-      [id],
+      [id.toString()],
     )
 
     try {

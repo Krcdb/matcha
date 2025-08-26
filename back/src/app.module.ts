@@ -11,6 +11,7 @@ import { ConnectedModule } from './connected/connected.module';
 import { ViewModule } from './view/view.module';
 import { ReportModule } from './report/report.module';
 import { BlockModule } from './block/block.module';
+import { InterestsModule } from './interests/interests.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { BlockModule } from './block/block.module';
     ViewModule,
     BlockModule,
     ReportModule,
+    InterestsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

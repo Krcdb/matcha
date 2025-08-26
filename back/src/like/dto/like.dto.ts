@@ -1,4 +1,4 @@
 export interface LikeDto {
-  liker: string;
-  liked: string;
+  liker: number;
+  liked: number;
 }
