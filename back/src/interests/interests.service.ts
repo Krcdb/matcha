@@ -17,19 +17,36 @@ export class InterestsService {
 
       interests.forEach(async (interest) => {
         try {
-          const insertInterestsQuery = this.databaseService.insertQuery(
+          let interestId: number;
+
+          const selectQuery = this.databaseService.selectQuery(
             "interests",
+            ["id"],
             ["name"],
             [interest],
-            ["id"],
           )
+          
+          const selectResult = await this.databaseService.execute(selectQuery.query, selectQuery.params);
 
-          const resultUpdateInterests = await this.databaseService.execute(insertInterestsQuery.query, insertInterestsQuery.params);
+          if (selectResult.rowCount) {
+            interestId = selectResult.rows[0].id;
+          } else {
+            const insertInterestsQuery = this.databaseService.insertQuery(
+              "interests",
+              ["name"],
+              [interest],
+              ["id"],
+            )
+          
+            const resultUpdateInterests = await this.databaseService.execute(insertInterestsQuery.query, insertInterestsQuery.params);
+            interestId = resultUpdateInterests.rows[0].id;
+          }
+
           
           const insertQuery = this.databaseService.insertQuery(
             "users_interests",
             ["user_id", "interest_id"],
-            [userId, resultUpdateInterests.rows[0].id]
+            [userId.toString(), interestId.toString()]
           )
 
           await this.databaseService.execute(insertQuery.query, insertQuery.params);
