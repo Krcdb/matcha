@@ -118,7 +118,7 @@ export class UsersService {
         message: "Users finded",
         data: mappedReseult,
       }
-    }catch (e: any) {
+    } catch (e: any) {
       this.logger.error(`Error during user creation : ${e.message}`);
 
       if (e instanceof NotFoundException) {

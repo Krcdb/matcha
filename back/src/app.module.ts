@@ -6,6 +6,8 @@ import { DatabaseModule } from './common/database/database.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './common/auth/auth.module';
 import { BrevoModule } from './brevo/brevo.module';
+import { LikeModule } from './like/like.module';
+import { ConnectedModule } from './connected/connected.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { BrevoModule } from './brevo/brevo.module';
     UsersModule,
     AuthModule,
     BrevoModule,
+    LikeModule,
+    ConnectedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
