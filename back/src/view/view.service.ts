@@ -33,7 +33,7 @@ export class ViewService {
         }
       }
     } catch (e: any) {
-      this.logger.error(`Error during user creation : ${e.message}`);
+      this.logger.error(`Error during view creation : ${e.message}`);
       
       if (e.code === "23505") {
         throw new ConflictException("View relation already exist");

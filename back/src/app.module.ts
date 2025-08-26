@@ -9,6 +9,8 @@ import { BrevoModule } from './brevo/brevo.module';
 import { LikeModule } from './like/like.module';
 import { ConnectedModule } from './connected/connected.module';
 import { ViewModule } from './view/view.module';
+import { ReportModule } from './report/report.module';
+import { BlockModule } from './block/block.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { ViewModule } from './view/view.module';
     LikeModule,
     ConnectedModule,
     ViewModule,
+    BlockModule,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
