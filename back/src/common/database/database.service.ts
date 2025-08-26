@@ -37,12 +37,15 @@ export class DatabaseService implements OnModuleInit {
     return this.pool.query(query, params);
   }
 
-  insertQuery(table: string, columns: string[], params: string[]): { query : string, params: string[]} {
+  insertQuery(table: string, columns: string[], params: string[], returning?: string[]): { query : string, params: string[]} {
     let query = "INSERT INTO " + table + " (";
     query += columns.join(", ");
     query += ") VALUES (";
     query += params.map((_, i) => `$${i + 1}`).join(", ");
     query += ")";
+    if (returning?.length !== undefined) {
+      query += ' RETURNING ' + returning?.join(", ");
+    }
     
     return { query, params };
   }

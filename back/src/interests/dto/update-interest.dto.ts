@@ -1,4 +1,4 @@
-export interface updateInterestsDto {
+export interface UpdateInterestsDto {
   userId: number;
-
+  interests: string[];
 }
