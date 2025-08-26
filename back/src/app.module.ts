@@ -8,6 +8,7 @@ import { AuthModule } from './common/auth/auth.module';
 import { BrevoModule } from './brevo/brevo.module';
 import { LikeModule } from './like/like.module';
 import { ConnectedModule } from './connected/connected.module';
+import { ViewModule } from './view/view.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ConnectedModule } from './connected/connected.module';
     BrevoModule,
     LikeModule,
     ConnectedModule,
+    ViewModule,
   ],
   controllers: [AppController],
   providers: [AppService],

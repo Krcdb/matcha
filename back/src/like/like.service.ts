@@ -17,7 +17,6 @@ export class LikeService {
   async newLike(likeDto: LikeDto): Promise<ApiResponse<LikeResponse>> {
     const {liker, liked} = likeDto;
 
-
     const selectQuery = this.databaseService.selectQuery(
       "liked",
       ["*"],
