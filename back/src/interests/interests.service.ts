@@ -42,7 +42,6 @@ export class InterestsService {
             interestId = resultUpdateInterests.rows[0].id;
           }
 
-          
           const insertQuery = this.databaseService.insertQuery(
             "users_interests",
             ["user_id", "interest_id"],
