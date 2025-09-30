@@ -1,4 +1,12 @@
-import { ConflictException, HttpException, HttpStatus, Injectable, InternalServerErrorException, Logger, NotFoundException } from "@nestjs/common";
+import {
+	ConflictException,
+	HttpException,
+	HttpStatus,
+	Injectable,
+	InternalServerErrorException,
+	Logger,
+	NotFoundException,
+} from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { DatabaseService } from "src/common/database/database.service";
 import * as bcrypt from "bcrypt";
@@ -10,122 +18,155 @@ import { mapUserDbToFindUserResponse } from "./mapper/user-db-to-find-user-respo
 
 @Injectable()
 export class UsersService {
-  private readonly logger = new Logger(UsersService.name);
-  
-  constructor(
-    private readonly databaseService: DatabaseService,
-    private readonly brevoService: BrevoService,
-  ) {}
+	private readonly logger = new Logger(UsersService.name);
 
-  async create(createUserDto: CreateUserDto): Promise<ApiResponse<CreateUserResponse>> {
-    const {
-      email,
-      username,
-      firstName,
-      lastName,
-      password,
-      birthdate,
-      gender,
-      sexualPreference,
-      isVerified,
-    } = createUserDto;
+	constructor(
+		private readonly databaseService: DatabaseService,
+		private readonly brevoService: BrevoService,
+	) {}
 
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+	async create(
+		createUserDto: CreateUserDto,
+	): Promise<ApiResponse<CreateUserResponse>> {
+		const {
+			email,
+			username,
+			firstName,
+			lastName,
+			password,
+			birthdate,
+			gender,
+			sexualPreference,
+			isVerified,
+		} = createUserDto;
 
-    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+		const saltRounds = 10;
+		const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    const insertQuery = this.databaseService.insertQuery(
-      "users",
-      ["email", "username", "first_name", "last_name", "password", "birthdate", "gender", "sexual_preferences", "is_verified", "verification_code"],
-      [email, username, firstName, lastName, hashedPassword, birthdate, gender, sexualPreference, isVerified, verificationCode]
-    );
+		const verificationCode = Math.floor(
+			100000 + Math.random() * 900000,
+		).toString();
 
-    try {
-      await this.databaseService.execute(insertQuery.query, insertQuery.params);
+		const insertQuery = this.databaseService.insertQuery(
+			"users",
+			[
+				"email",
+				"username",
+				"first_name",
+				"last_name",
+				"password",
+				"birthdate",
+				"gender",
+				"sexual_preferences",
+				"is_verified",
+				"verification_code",
+			],
+			[
+				email,
+				username,
+				firstName,
+				lastName,
+				hashedPassword,
+				birthdate,
+				gender,
+				sexualPreference,
+				isVerified.toString(),
+				verificationCode,
+			], // ✅ Convert isVerified to string
+		);
 
-      this.logger.log(`User created: ${email}`);
+		try {
+			await this.databaseService.execute(insertQuery.query, insertQuery.params);
 
-      await this.brevoService.sendTransactionalEmail(
-        [{email}],
-        "Verification code",
-        `This is your verification code ${verificationCode}`,
-      );
+			this.logger.log(`User created: ${email}`);
 
-      return {
-        statusCode: 201,
-        message: "User created successfully",
-        data: {
-          email: email,
-          username: username,
-        }
-      }
-    } catch (e: any) {
-      this.logger.error(`Error during user creation : ${e.message}`);
-      
-      if (e.code === "23505") {
-        throw new ConflictException("Email or username already exists");
-      }
-      
-      throw new InternalServerErrorException("An unexpected error occurred");
-    }
-  }
+			await this.brevoService.sendTransactionalEmail(
+				[{ email }],
+				"Verification code",
+				`This is your verification code ${verificationCode}`,
+			);
 
-  async findAll(): Promise<ApiResponse<FindUserResponse[]>> {
-    const selectQuery = this.databaseService.selectQuery(
-      "users",
-      ["*"],
-      [],
-      [],
-    )
+			return {
+				statusCode: 201,
+				message: "User created successfully",
+				data: {
+					email: email,
+					username: username,
+				},
+			};
+		} catch (e: any) {
+			this.logger.error(`Error during user creation : ${e.message}`);
 
-    try {
-      const res = await this.databaseService.execute(selectQuery.query, selectQuery.params);
-      
-      const mappedReseult = res.rows.map(mapUserDbToFindUserResponse);
+			if (e.code === "23505") {
+				throw new ConflictException("Email or username already exists");
+			}
 
-      return {
-        statusCode: 200,
-        message: "Users finded",
-        data: mappedReseult,
-      }
-    }catch (e: any) {
-      this.logger.error(`Error during user creation : ${e.message}`);
-      
-      throw new InternalServerErrorException("An unexpected error occurred");
-    }
-  }
+			throw new InternalServerErrorException("An unexpected error occurred");
+		}
+	}
 
-  async findOne(id: number): Promise<ApiResponse<FindUserResponse>> {
-    const selectQuery = this.databaseService.selectQuery(
-      "users",
-      ["*"],
-      ["id"],
-      [id.toString()],
-    )
+	// ...existing code...
+	async findAll(): Promise<ApiResponse<FindUserResponse[]>> {
+		const selectQuery = this.databaseService.selectQuery(
+			"users",
+			["*"],
+			[],
+			[],
+		);
 
-    try {
-      const res = await this.databaseService.execute(selectQuery.query, selectQuery.params);
-      
-      if (res.rowCount === 0) {
-        throw new NotFoundException(`User with id ${id} not found`);
-      }
+		try {
+			const res = await this.databaseService.execute(
+				selectQuery.query,
+				selectQuery.params,
+			);
 
-      const mappedReseult = mapUserDbToFindUserResponse(res.rows[0]);
+			const mappedReseult = res.rows.map(mapUserDbToFindUserResponse);
 
-      return {
-        statusCode: 200,
-        message: "Users finded",
-        data: mappedReseult,
-      }
-    } catch (e: any) {
-      this.logger.error(`Error during user creation : ${e.message}`);
+			return {
+				statusCode: 200,
+				message: "Users finded",
+				data: mappedReseult,
+			};
+		} catch (e: any) {
+			this.logger.error(`Error during user creation : ${e.message}`);
 
-      if (e instanceof NotFoundException) {
-        throw e;
-      }
-      
-      throw new InternalServerErrorException("An unexpected error occurred");
-    }
-  }
+			throw new InternalServerErrorException("An unexpected error occurred");
+		}
+	}
+
+	async findOne(id: number): Promise<ApiResponse<FindUserResponse>> {
+		const selectQuery = this.databaseService.selectQuery(
+			"users",
+			["*"],
+			["id"],
+			[id.toString()],
+		);
+
+		try {
+			const res = await this.databaseService.execute(
+				selectQuery.query,
+				selectQuery.params,
+			);
+
+			if (res.rowCount === 0) {
+				throw new NotFoundException(`User with id ${id} not found`);
+			}
+
+			const mappedReseult = mapUserDbToFindUserResponse(res.rows[0]);
+
+			return {
+				statusCode: 200,
+				message: "Users finded",
+				data: mappedReseult,
+			};
+		} catch (e: any) {
+			this.logger.error(`Error during user creation : ${e.message}`);
+
+			if (e instanceof NotFoundException) {
+				throw e;
+			}
+
+			throw new InternalServerErrorException("An unexpected error occurred");
+		}
+	}
 }
